@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Header,Icon,Button, Comment, Form, Loader} from 'semantic-ui-react'
+import { Header,Icon,Button, Comment, Form, Loader, Segment} from 'semantic-ui-react'
 import logo from './logo.svg';
 import './App.css';
 
@@ -30,9 +30,9 @@ class App extends Component {
   componentDidMount(){
 
     let self = this
-    rootRef.on('value',snap => {
+    rootRef.on('value',listChat => {
       self.setState({
-        chats: snap.val()
+        chats: listChat.val()
       })
     });
   }
@@ -44,7 +44,6 @@ class App extends Component {
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
-
         </div>
 
         <div>
@@ -58,11 +57,11 @@ class App extends Component {
 
         <div style={{display: 'flex', justifyContent: 'center'}}>
           <Comment.Group>
-
+  
           <ChatList chats={this.state.chats} />
 
             <Form onSubmit={this.handleSubmit}>
-              <Form.TextArea onChange={this.handleChange} value={this.state.text} placeholder='Send Message...' autoHeight/>
+              <Form.TextArea onChange={this.handleChange} value={this.state.new_text} placeholder='Send Message...' autoHeight/>
               <Button content='Send' labelPosition='left' icon='edit' primary />
             </Form>
           </Comment.Group>
@@ -81,13 +80,16 @@ class App extends Component {
     e.preventDefault();
 
     var time = new Date().getTime();
-    var newdate = new Date(time);
+    var newdate = new Date(time).toString();
 
     var new_chat = {
       text: this.state.new_text,
-      date: newdate.toString()
+      date: newdate
     };
     rootRef.push(new_chat)
+    this.setState({
+      new_text:''
+    })
   }
 }
 
@@ -97,15 +99,17 @@ class ChatList extends React.Component {
     if(this.props.chats.length===0){
       return (
         <div>
-          <Loader active inline />
+         <Segment>
+           <Loader active inline/>
+         </Segment>
         </div>
       );
     }
     else{
       let list=[]
-      let obj = this.props.chats
-      for (var prop in obj) {
-        list.push(obj[prop])
+      let chats = this.props.chats
+      for (let key in chats) {
+        list.push(chats[key])
       }
       console.log('list---',list);
     return (
