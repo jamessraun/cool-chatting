@@ -1,4 +1,4 @@
 # cool-chatting
 
-##how to use
+## how to use
 npm start
